@@ -1,4 +1,4 @@
-import { Application, Router, send } from "https://deno.land/x/oak/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import logger from "https://deno.land/x/oak_logger/mod.ts";
 
