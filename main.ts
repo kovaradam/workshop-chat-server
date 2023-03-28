@@ -5,41 +5,16 @@ import logger from "https://deno.land/x/oak_logger/mod.ts";
 let messages: Array<
   { text: string; username: string; roomId: string; timestamp: string }
 > = [];
-let activeUsers: string[] = [];
 
-function getMessageFromParams(params: URLSearchParams) {
-  const text = params.get("text");
-  const username = params.get("username");
-  const roomId = params.get("room-id") || null;
-  if (!text || !username) {
-    return null;
-  }
-
-  return {
-    text: String(text),
-    username: String(text),
-    roomId: String(roomId ?? ""),
-    timestamp: new Date().getTime().toString(),
-  };
-}
+let activeUsers: Array<{ username: string; timeoutId: number }> = [];
 
 const router = new Router();
 
 router
-  .post("/active-users/:username", (context) => {
-    activeUsers = activeUsers.filter((username) =>
-      username !== context.params.username
-    ).concat(context.params.username);
-    context.response.body = Array.from(activeUsers);
-  })
-  .delete("/active-users/:username", (context) => {
-    activeUsers = activeUsers.filter((username) =>
-      username !== context.params.username
-    );
-    context.response.body = Array.from(activeUsers);
-  })
   .get("/active-users", (context) => {
-    context.response.body = Array.from(activeUsers);
+    context.response.body = Array.from(
+      activeUsers.map((user) => user.username),
+    );
   })
   .get("/messages", (context) => {
     context.response.body = Array.from(messages);
@@ -88,12 +63,20 @@ router
         </form>
         <form method="post" action="messages/delete"><button>Delete messages</button></form>
 
+        <h2>messages</h2>
         <ul>
             ${
       messages.map((message) => `<li>${JSON.stringify(message)}</li>`).join("")
     }
         </ul>
     
+        <h2>users</h2>
+        <ul>
+            ${activeUsers.map((user) => `<li>${user.username}</li>`).join("")}
+
+        </ul>
+    
+
     </html>    
     `);
   });
@@ -105,3 +88,34 @@ app.use(router.routes());
 
 console.info("CORS-enabled web server listening on port 8000");
 await app.listen({ port: 8000 });
+
+function getMessageFromParams(params: URLSearchParams) {
+  const text = params.get("text");
+  const username = params.get("username");
+  const roomId = params.get("room-id") || null;
+  if (!text || !username) {
+    return null;
+  }
+
+  addActiveUser(username);
+
+  return {
+    text: String(text),
+    username: String(text),
+    roomId: String(roomId ?? ""),
+    timestamp: new Date().getTime().toString(),
+  };
+}
+
+function addActiveUser(username: string) {
+  const currentUser = activeUsers.find((user) => user.username === username);
+  if (currentUser) {
+    clearTimeout(currentUser.timeoutId);
+  }
+  activeUsers.push({
+    username: username,
+    timeoutId: setTimeout(() => {
+      activeUsers = activeUsers.filter((user) => user.username !== username);
+    }, 10000),
+  });
+}
