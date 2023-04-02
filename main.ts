@@ -21,6 +21,13 @@ router
       getChatRooms(messages),
     );
   })
+  .get("/app-state", (context) => {
+    context.response.body = {
+      rooms: getChatRooms(messages),
+      messages,
+      activeUsers,
+    };
+  })
   .get("/messages", (context) => {
     context.response.body = Array.from(messages);
   }).post("/messages", (context) => {
