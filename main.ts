@@ -16,6 +16,11 @@ router
       activeUsers.map((user) => user.username),
     );
   })
+  .get("/chat-rooms", (context) => {
+    context.response.body = Array.from(
+      getChatRooms(messages),
+    );
+  })
   .get("/messages", (context) => {
     context.response.body = Array.from(messages);
   }).post("/messages", async (context) => {
@@ -77,6 +82,16 @@ router
             ${activeUsers.map((user) => `<li>${user.username}</li>`).join("\n")}
 
         </ul>
+
+
+        <h2>chat room ids</h2>
+        <ul>
+            ${
+      getChatRooms(messages).map((id) => `<li>${id}</li>`).join(
+        "\n",
+      )
+    }
+        </ul>
     
 
     </html>    
@@ -121,4 +136,12 @@ function addActiveUser(username: string) {
       activeUsers = activeUsers.filter((user) => user.username !== username);
     }, 10000),
   });
+}
+
+function getChatRooms(inputMessages: typeof messages) {
+  return messages.map((message) => message.roomId).filter((
+    thisId,
+    idx,
+    array,
+  ) => array.findIndex((arrayId) => arrayId === thisId) === idx);
 }
