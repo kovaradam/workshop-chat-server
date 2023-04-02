@@ -72,7 +72,7 @@ router
     }
         </ul>
     
-        <h2>users</h2>
+        <h2>active users</h2>
         <ul>
             ${activeUsers.map((user) => `<li>${user.username}</li>`).join("\n")}
 
