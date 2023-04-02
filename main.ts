@@ -1,6 +1,6 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
-import logger from "https://deno.land/x/oak_logger/mod.ts";
+import logger from "https://deno.land/x/oak_logger@1.0.0/mod.ts";
 
 let messages: Array<
   { text: string; username: string; roomId: string; timestamp: string }
@@ -23,9 +23,8 @@ router
   })
   .get("/messages", (context) => {
     context.response.body = Array.from(messages);
-  }).post("/messages", async (context) => {
-    const body = await context.request.body().value;
-    const params = new URLSearchParams(Object.entries(body.message ?? {}));
+  }).post("/messages", (context) => {
+    const params = context.request.url.searchParams;
 
     const message = getMessageFromParams(params);
 
