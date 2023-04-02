@@ -113,6 +113,7 @@ function addActiveUser(username: string) {
   const currentUser = activeUsers.find((user) => user.username === username);
   if (currentUser) {
     clearTimeout(currentUser.timeoutId);
+    activeUsers = activeUsers.filter((user) => user.username !== username);
   }
   activeUsers.push({
     username: username,
