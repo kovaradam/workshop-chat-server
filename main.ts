@@ -139,8 +139,6 @@ function addActiveUser(username: string) {
 }
 
 function getChatRooms(inputMessages: typeof messages) {
-  console.log(inputMessages.map((message) => message.roomId).filter(Boolean));
-
   return inputMessages.map((message) => message.roomId).filter(Boolean).filter((
     thisId,
     idx,
