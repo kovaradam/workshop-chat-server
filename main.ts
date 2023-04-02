@@ -17,7 +17,7 @@ function getMessageFromParams(params: URLSearchParams) {
 
   return {
     text: String(text),
-    username: String(text),
+    username: String(username),
     roomId: String(roomId ?? ""),
     timestamp: new Date().getTime().toString(),
   };
