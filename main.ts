@@ -66,13 +66,15 @@ router
         <h2>messages</h2>
         <ul>
             ${
-      messages.map((message) => `<li>${JSON.stringify(message)}</li>`).join("")
+      messages.map((message) => `<li>${JSON.stringify(message)}</li>`).join(
+        "\n",
+      )
     }
         </ul>
     
         <h2>users</h2>
         <ul>
-            ${activeUsers.map((user) => `<li>${user.username}</li>`).join("")}
+            ${activeUsers.map((user) => `<li>${user.username}</li>`).join("\n")}
 
         </ul>
     
