@@ -139,11 +139,13 @@ function addActiveUser(username: string) {
   activeUsers.push({
     username: username,
     timeoutId: setTimeout(() => {
+      // Delete active user after some period of time
       activeUsers = activeUsers.filter((user) => user.username !== username);
     }, 10000),
   });
 }
 
+// get unique roomIds from messages
 function getChatRooms(inputMessages: typeof messages) {
   return inputMessages.map((message) => message.roomId).filter(Boolean).filter((
     thisId,
